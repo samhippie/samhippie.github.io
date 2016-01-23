@@ -1,0 +1,22 @@
+<html>
+<body>
+<p>
+<?php
+	
+	switch($_GET["id"])
+	{
+	case 1:
+		echo "one";
+		break;
+	case 2:
+		echo "two";
+		break;
+	default:
+		echo "uh oh";
+		break;
+	}
+	echo "<br/>";
+?>
+</p>
+</body>
+</html>
