@@ -21,6 +21,16 @@ var interesting_pokemon =
 window.onload = init;
 function init()
 {
+	//add custom pokemon from GET
+	var custom_pokemon = window.location.search.replace("?", "").split("&").filter(function (name)
+	{
+		return name in BattlePokedex;
+	});
+	for(pokemon of custom_pokemon)
+	{
+		interesting_pokemon.push(pokemon);
+	}
+
 	//initialize the list of pokemon using pokedex.js
 	init_pokemon_list();
 	//initialize the list of moves using moves.js
@@ -38,6 +48,73 @@ function init()
 	
 	//set callback for submit button
 	document.getElementById("submit").onclick=submit_callback;
+}
+
+function do_attack(attack, attacker, attack_EV, attack_IV, attack_stage, attack_nature, misc,
+				   target, target_hp_EV, target_def_EV, target_hp_IV, target_def_IV, target_nature)
+{
+	//get the correct base attack stat
+	//also check the type of attack
+	var base_atk_stat;
+	var isPhysical;
+	if(attack.category == "Physical")
+	{
+		base_atk_stat = attacker.baseStats.atk;
+		isPhysical = true;
+	}
+	else
+	{
+		base_atk_stat = attacker.baseStats.spa;
+		isPhysical = false;
+	}
+	
+	//calculate the actual attack stat
+	var atk_stat = stat_calc(base_atk_stat, attack_IV, attack_EV, 50, attack_nature) * attack_stage;
+
+	//get base power of move
+	var base_power = attack.basePower;
+
+	//calculate multiplier due to stab
+	var stab = 1.0;
+	if(attacker.types.indexOf(attack.type) != -1)
+	{
+		stab = 1.5;
+	}
+	
+	var type_mul = 1.0;
+	//maps showdown's type effectiveness to actual multiplier
+	var type_muls=[1.0, 2.0, 0.5, 0.0];
+
+	//multiply the effectiveness of each type
+	for(type of target.types)
+	{
+		type_mul *= type_muls[BattleTypeChart[type].damageTaken[attack.type]]
+	}
+
+	//find the relevant defense stat
+	var base_def_stat;
+	if(isPhysical)
+	{
+		base_def_stat = target.baseStats.def;
+	}
+	else
+	{
+		base_def_stat = target.baseStats.spd;
+	}
+
+	//the actual stats of the target
+	var def_stat = stat_calc(base_def_stat, target_def_IV, target_def_EV, 50, target_nature);
+	var hp_stat = hp_stat_calc(target.baseStats.hp, target_hp_IV, target_hp_EV, 50);
+	
+	//get the raw damage done
+	var range = damage(atk_stat, def_stat, base_power, stab * misc, type_mul);
+
+	//finding the percentage done based on HP
+	var percent = [0,0];
+	percent[0] = Math.round(1000 * range[0] / hp_stat) / 10;
+	percent[1] = Math.round(1000 * range[1] / hp_stat) / 10;
+
+	return [range, percent];
 }
 
 function submit_callback()
@@ -100,51 +177,19 @@ function submit_callback()
 		nature = 0.9;
 	}
 
-	//get the correct base attack stat
-	//also check the type of attack
-	var base_atk_stat;
-	var isPhysical;
-	if(attacking_move.category == "Physical")
-	{
-		base_atk_stat = attacking_pokemon.baseStats.atk;
-		isPhysical = true;
-	}
-	else
-	{
-		base_atk_stat = attacking_pokemon.baseStats.spa;
-		isPhysical = false;
-	}
-	
-	//calculate the actual attack stat
-	var atk_stat = stat_calc(base_atk_stat, IV, EV, 50, nature) * stage_mult;
-
-	//get base power of move
-	var base_power = attacking_move.basePower;
-
-	//calculate multiplier due to stab
-	var stab = 1.0;
-	if(attacking_pokemon.types.indexOf(attacking_move.type) != -1)
-	{
-		stab = 1.5;
-	}
-
-	//convenience function to find damage with one arg
-	function damage_range_func(stat, type_mul) 
-	{
-		return damage(atk_stat, stat, base_power, stab * misc, type_mul)
-	}
-
 	//iterate over each interesting pokemon e.g. kang
 	var target_def_nature = [1, 1, 1.1];
 	var target_hp_EV = [4, 252, 252];
 	var target_def_EV = [0, 0, 252]
 	var target_title = ["Squishy (4/0)", "Kinda bulky (252/0)", "BALKY (252/252+)"];
+
+	//clear the previous calcs
 	var right_div = document.getElementById("right");
 	while(right_div.firstChild)
 	{
 		right_div.removeChild(right_div.firstChild);
 	}
-	var type_muls = [1.0, 2.0, 0.5, 0.0];
+	//var type_muls = [1.0, 2.0, 0.5, 0.0];
 	for(target_index of interesting_pokemon)
 	{
 		for(var i = 0; i < 3; i++)
@@ -152,41 +197,21 @@ function submit_callback()
 			//the actual pokemon
 			var target = BattlePokedex[target_index];
 			
-			var type_mul = 1.0;
-			for(type of target.types)
-			{
-				type_mul *= type_muls[BattleTypeChart[type].damageTaken[attacking_move.type]]
-			}
-			console.log(target.species + " " + type_mul);
-
-			//find the relevant defense stat
+			//get the damage in form [[low percent, hight percent],[low damage, high damage]]
+			damages = do_attack(attacking_move, attacking_pokemon, EV, IV, stage_mult, nature, misc, target, target_hp_EV[i], target_def_EV[i], 31, 31, target_def_nature[i]);
 			
-			var base_def_stat;
-			if(isPhysical)
-			{
-				base_def_stat = target.baseStats.def;
-			}
-			else
-			{
-				base_def_stat = target.baseStats.spd;
-			}
-
-			//the EVs of the target
-			var def_stat = stat_calc(base_def_stat, 31, target_def_EV[i], 50, target_def_nature[i]);
-			var hp_stat = hp_stat_calc(target.baseStats.hp, 31, target_hp_EV[i], 50);
-			var percent = [0,0];
-			var range = damage_range_func(def_stat, type_mul);
-			percent[0] = Math.round(1000 * range[0] / hp_stat) / 10;
-			percent[1] = Math.round(1000 * range[1] / hp_stat) / 10;
+			//what goes in the <p>
 			var outstring = target.species + " (" + target_title[i] + "): " + 
-							percent[0] + "%-" + percent[1] + "%" +
-							" (" + range[0] + "-" + range[1] + ")";
+							damages[1][0] + "%-" + damages[1][1] + "%" +
+							" (" + damages[0][0] + "-" + damages[0][1] + ")";
+			//insert outstring into the document
 			var node = document.createElement("p");
-			if(percent[0] >= 100)
+			//color code to point out OHKOs and 2HKOs
+			if(damages[1][0] >= 100)
 			{
 				node.style.color="green";
 			}
-			else if(percent[0] >= 50)
+			else if(damages[1][0] >= 50)
 			{
 				node.style.color="blue";
 			}
