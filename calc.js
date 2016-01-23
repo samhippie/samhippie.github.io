@@ -129,9 +129,9 @@ function submit_callback()
 	}
 
 	//convenience function to find damage with one arg
-	function damage_range_func(stat) 
+	function damage_range_func(stat, type_mul) 
 	{
-		return damage(atk_stat, stat, base_power, stab * misc, 1)
+		return damage(atk_stat, stat, base_power, stab * misc, type_mul)
 	}
 
 	//iterate over each interesting pokemon e.g. kang
@@ -144,13 +144,23 @@ function submit_callback()
 	{
 		right_div.removeChild(right_div.firstChild);
 	}
+	var type_muls = [1.0, 2.0, 0.5, 0.0];
 	for(target_index of interesting_pokemon)
 	{
 		for(var i = 0; i < 3; i++)
 		{
 			//the actual pokemon
 			var target = BattlePokedex[target_index];
+			
+			var type_mul = 1.0;
+			for(type of target.types)
+			{
+				type_mul *= type_muls[BattleTypeChart[type].damageTaken[attacking_move.type]]
+			}
+			console.log(target.species + " " + type_mul);
+
 			//find the relevant defense stat
+			
 			var base_def_stat;
 			if(isPhysical)
 			{
@@ -165,7 +175,7 @@ function submit_callback()
 			var def_stat = stat_calc(base_def_stat, 31, target_def_EV[i], 50, target_def_nature[i]);
 			var hp_stat = hp_stat_calc(target.baseStats.hp, 31, target_hp_EV[i], 50);
 			var percent = [0,0];
-			var range = damage_range_func(def_stat);
+			var range = damage_range_func(def_stat, type_mul);
 			percent[0] = Math.round(1000 * range[0] / hp_stat) / 10;
 			percent[1] = Math.round(1000 * range[1] / hp_stat) / 10;
 			var outstring = target.species + " (" + target_title[i] + "): " + 

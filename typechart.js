@@ -1,6 +1,6 @@
 'use strict';
 
-exports.BattleTypeChart = {
+var BattleTypeChart = {
 	"Bug": {
 		damageTaken: {
 			"Bug": 0,
