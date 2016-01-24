@@ -67,12 +67,19 @@ function do_attack(attack, attacker, attack_EV, attack_IV, attack_stage, attack_
 		base_atk_stat = attacker.baseStats.spa;
 		isPhysical = false;
 	}
-	
+
 	//calculate the actual attack stat
 	var atk_stat = stat_calc(base_atk_stat, attack_IV, attack_EV, 50, attack_nature) * attack_stage;
 
 	//get base power of move
 	var base_power = attack.basePower;
+
+	var isSpread = false;
+	//apply spread damage modifier
+	if(attack.target == "allAdjacent" || attack.target == "allAdjacentFoes")
+	{
+		isSpread = true;
+	}
 
 	//calculate multiplier due to stab
 	var stab = 1.0;
@@ -107,12 +114,12 @@ function do_attack(attack, attacker, attack_EV, attack_IV, attack_stage, attack_
 	var hp_stat = hp_stat_calc(target.baseStats.hp, target_hp_IV, target_hp_EV, 50);
 	
 	//get the raw damage done
-	var range = damage(atk_stat, def_stat, base_power, stab * misc, type_mul);
+	var range = damage(atk_stat, def_stat, base_power, stab, type_mul, misc, isSpread);
 
 	//finding the percentage done based on HP
 	var percent = [0,0];
-	percent[0] = Math.round(1000 * range[0] / hp_stat) / 10;
-	percent[1] = Math.round(1000 * range[1] / hp_stat) / 10;
+	percent[0] = Math.oldround(1000 * range[0] / hp_stat) / 10;
+	percent[1] = Math.oldround(1000 * range[1] / hp_stat) / 10;
 
 	return [range, percent];
 }
@@ -226,12 +233,38 @@ function submit_callback()
 	}
 }
 
-function damage(attack, defense, base, stab, type)
+function int_div(x, y)
 {
-	var modifier = stab * type;
-	var damage = ((2 * 50 + 10)/250 * attack / defense * base + 2) * modifier;
-	//var damage = Math.floor((((((2 * 50 / 5 + 2) * attack * base) / defense)/50) + 2) * modifier)
-	return [Math.floor(damage * (217.0/255.0)), Math.floor(damage)];
+	return ~~(x / y);
+}
+
+Math.oldround = Math.round;
+Math.round = function(n)
+{
+	return (n % 1 > 0.5) ? Math.ceil(n) : Math.floor(n);
+}
+
+//roll, then stab, then type, then misc
+function damage(attack, defense, base, stab, type, misc, isSpread)
+{
+	//normal
+	var damage = int_div(int_div((int_div(2 * 50, 5) + 2) * base * attack, defense), 50) + 2;
+	if(isSpread)
+	{
+		damage = Math.round(damage * 0.75);
+	}
+	//roll
+	var damage_min = int_div(damage * 85, 100);
+	//stab
+	damage = Math.round(damage * stab);
+	damage_min = Math.round(damage_min * stab);
+	//type
+	damage = Math.round(damage * type);
+	damage_min = Math.round(damage_min * type);
+	//misc
+	damage = Math.round(damage * misc);
+	damage_min = Math.round(damage_min * misc);
+	return [damage_min, damage];
 }
 
 function stat_calc(base, IV, EV, level, nature)
