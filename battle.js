@@ -24,8 +24,8 @@ function submit()
 	{
 		console.log("swapped");
 	}
-	t1 = l[0].map(function(x) monToIndex[x]);
-	t2 = l[1].map(function(x) monToIndex[x]+128);
+	t1 = l[0].map(function(x) {return monToIndex[x];});
+	t2 = l[1].map(function(x) {return monToIndex[x]+128;});
 	 
 	console.log(t1.concat(t2));
 
