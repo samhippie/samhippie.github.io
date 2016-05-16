@@ -147,6 +147,6 @@ function loadIndexer(data)
 function init()
 {
 	console.log("loading")
-	loadJSON("samhippie.github.io/net.json.js", handleData);
-	loadJSON("samhippie.github.io/indexer.json.js", loadIndexer);
+	loadJSON("samhippie.github.io/net.json.js?callback=?", handleData);
+	loadJSON("samhippie.github.io/indexer.json.js?callback=?", loadIndexer);
 }
