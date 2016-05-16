@@ -44,8 +44,8 @@ function submit()
 		t1score = output[0];
 		t2score = output[1];
 	}
-	document.getElementById("t1score").textContent = "Arbitrary score: " + math.round(t1score * 100.0)
-	document.getElementById("t2score").textContent = "Arbitrary score: " + math.round(t2score * 100.0)
+	document.getElementById("t1score").textContent = "Arbitrary score: " + math.round(t1score * 100.0);
+	document.getElementById("t2score").textContent = "Arbitrary score: " + math.round(t2score * 100.0);
 }
 
 function loadJSON(name, callback)
@@ -83,6 +83,7 @@ function handleData(data)
 		biases.push(wb[2 * i + 1]);
 	}
 	console.log("weights loaded");
+	document.getElementById("loadmsg").textContent = "";
 }
 
 function softmax(vector)
