@@ -1,27 +1,52 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 	<head>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.2.1/math.js"></script>
-		<script src="battle.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+		<script src="sock.js"></script>
+		<script src="canvas.js"></script>
+		<link rel="stylesheet" href="style.css"></link>
 	</head>
 	<body>
-		<p>matchup analysis</p>
-		<p id="loadmsg">Loading...<p>
-		<p>Team 1	<div id="t1score">Arbitrary score:</div></p>
-		<select id="mon0"></select>
-		<select id="mon1"></select>
-		<select id="mon2"></select>
-		<select id="mon3"></select>
-		<select id="mon4"></select>
-		<select id="mon5"></select>
-		<p>Team 2 <div id="t2score">Arbitrary score:</div></p>
-		<select id="mon6"></select>
-		<select id="mon7"></select>
-		<select id="mon8"></select>
-		<select id="mon9"></select>
-		<select id="mon10"></select>
-		<select id="mon11"></select>
-		<br><br>
-		<button id="submit" onclick="submit()">Submit</button>
+		<div id="wrapperdiv" class="wrapper">
+			<div id="leftdiv" class="float-left">
+				<div id="findserver">
+					<form>
+						server ip address:<br>
+						<input type="text" name="server" id="server"><br>
+						server port:<br>
+						<input type="text" name="port" id="port"><br>
+					</form>
+					<button onclick="connect()">connect</button>
+				</div>
+				<div id="findroom">
+					<form>
+						user name:<br>
+						<input type="text" name="name" id="name"><br>
+						room name:<br>
+						<input type="text" name="name" id="room"><br>
+						side:<br>
+						<input type="radio" name="side" id="white" value="white"> White<br>
+						<input type="radio" name="side" id="white" value="black"> Black<br>
+					</form>
+					<button onclick="roomSubmit()">submit</button>
+					<button onclick="handler1()">white</button>
+					<button onclick="handler2()">black</button>
+				</div>
+				<div id="roomwait">
+					<p>Waiting for game to begin...<p>
+					<button onclick="gameQuit()">cancel</button>
+				</div>
+				<div id="gamesetup">
+					<canvas id="setupcanvas" width="560" height="504"></canvas><br>
+					<button id="submitbutton" onclick="gameSubmit()">submit</button>
+					<button onclick="gameReset()">reset</button>
+					<button onclick="gameQuit()">quit</button>
+				</div>
+			</div>
+			<div id="rightdiv" class="float-right">
+				<div id="messdiv"></div>
+			</div>
+		</div>
 	</body>
 </html>
