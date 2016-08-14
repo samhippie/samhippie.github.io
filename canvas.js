@@ -359,5 +359,3 @@ function drawBoard(ctx)
 		}
 	}
 }
-
-canvasInit();

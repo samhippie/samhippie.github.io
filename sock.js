@@ -1,3 +1,5 @@
+canvasInit();
+
 window.onload = function()
 {
 	//hiding some sections that we'll show later
@@ -19,7 +21,7 @@ var oldPieces;
 function init(server, port)
 {
 	//connects us to the game server
-	sock = new SockJS("http://" + server + ":" + port + "/kindachess");
+	sock = new SockJS("https://" + server + ":" + port + "/kindachess");
 
 	//reseting some game stuff
 	for(var i = 0; i < spawnedPieces.length; i++)
@@ -46,6 +48,7 @@ function init(server, port)
 			inSetup = true;
 			isUserWhite = data[3] == "white";
 			canvasMain(true);
+			document.getElementById("submitbutton").disabled = false;
 		}
 		else if(data[0] == "roomfail")
 		{
@@ -53,6 +56,7 @@ function init(server, port)
 			postMessage("Room " + data[1] + "failed. Please try again.");
 			document.getElementById("findroom").hidden = false;
 			document.getElementById("gamesetup").hidden = true;
+			document.getElementById("roomwait").hidden = true;
 		}
 		else if(data[0] == "gameready")
 		{
@@ -118,11 +122,13 @@ function gameSubmit()
 		console.log("set submit");
 		sock.send("set|" + spawnedPieces);
 		console.log("set|" + spawnedPieces);
+		postMessage("sending initial pieces");
 	}
 	else
 	{
 		sock.send("move|" + curPieces);
 		console.log("move submit");
+		postMessage("sending turn");
 	}
 	document.getElementById("submitbutton").disabled = true;
 }
