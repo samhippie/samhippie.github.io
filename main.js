@@ -9,16 +9,15 @@ function push()
 	var name = $("input")[0].value;
 	var icon = $("input")[1].value;
 	var text = $("input")[2].value.toLowerCase();
-	var j = 0;
-	for(var i = 0; i < text.length; i += 140)
-	{
-		setTimeout(function()
-			   {
+
+
+
+
 		var x = $.ajax(
 				{
 					url: "https://discordapp.com/api/webhooks/277159899174010880/TMlj-Rm8PCoJDiVPzIvYv4pW-XXrz2XAJCxSJBZ1CVD0pXjNQNlnJRhHlcrMP9GY1Uxv",
 					data: JSON.stringify(
-						{"content": text.substr(i, i+140),
+						{"content": text,
 						 "tts": "true",
 						 "avatar_url": icon,
 						 "username": name
@@ -30,7 +29,6 @@ function push()
 				});
 
 		console.log(x);
-		}, j);
-		j += 3000;
+
 	}
 }
