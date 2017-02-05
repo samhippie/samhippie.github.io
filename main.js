@@ -8,11 +8,10 @@ function push()
 	console.log("posting!");
 	var name = $("input")[0].value;
 	var icon = $("input")[1].value;
-	var text = $("input")[2].value;
+	var text = $("input")[2].value.toLowerCase();
 	var x = $.ajax(
 			{
 				url: "https://discordapp.com/api/webhooks/277159899174010880/TMlj-Rm8PCoJDiVPzIvYv4pW-XXrz2XAJCxSJBZ1CVD0pXjNQNlnJRhHlcrMP9GY1Uxv",
-				//url: "https://posttestserver.com/post.php",
 				data: JSON.stringify(
 					{"content": text,
 					 "tts": "true",
