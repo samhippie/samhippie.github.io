@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<script src="main.js"></script>
+	</head>
+	<body>
+		title (required):<br>
+		<input type="text" id="title"></input>
+		<br>
+		text color:<br>
+		<input type="text" id="textColor"></input><br>
+		header text color:<br>
+		<input type="text" id="headerTextColor"></input><br>
+		background color:<br>
+		<input type="text" id="bg"></input><br>
+		background image URL:<br>
+		<input type="text" id="bgImage"></input><br>
+		header background color:<br>
+		<input type="text" id="headerColor"></input><br>
+		header image URL:<br>
+		<input type="text" id="header"></input><br>
+		trainer name background color:<br>
+		<input type="text" id="trainerColor"></input><br>
+		pokemon background color:<br>
+		<input type="text" id="monColor"></input><br>
+		font (use "web-safe" fonts if you don't know what you're doing):<br>
+		<input type="text" id="font"></input><br>
+		teams (required):<br>
+		<textarea id="teamsInput" name="text" rows="7" cols="100"></textarea>
+		<br>
+		<button onclick="submitTeams()">Submit</button><br>
+		<a hidden="true" id="link">download</a>
+		<br>
+		<br>
+		Teams should be formatted like this:<br>
+		trainer1,pokemon1,pokemon2,pokemon3,pokemon4,pokemon5,pokemon6<br>
+		trainer2,pokemon1,pokemon2,pokemon3,pokemon4,pokemon5,pokemon6<br>
+		...<br>
+		Exporting a spreadsheet as a CSV file should be good, just format the rows the same way
+	</body>
+</html>
