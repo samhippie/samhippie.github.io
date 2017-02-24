@@ -19,7 +19,7 @@ function genCss(co)//bg, bgImage, header, textColor, headerTextColor, font)
 	s += "color: " + co.headerTextColor + ";\n";
 	if(co.headerColor != "")
 		s += "background-color: " + co.headerColor + ";\n";
-	if(co.headerImage)
+	if(co.header == "")
 	{
 		s += "margin-left: -15px;\n";
 		s += "margin-right: -15px;\n";
