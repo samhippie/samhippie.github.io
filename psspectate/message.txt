@@ -1,3 +1,7 @@
 Press "Go" or "Auto Spectate" to begin.
 
-"Game mode" is the exact same format that's used in PS URLs. "Go" immediately finds a new match. "Auto Spectate" finds new matches whenever the current one ends. "Stop Auto Spectate" disables this behavior. New matches are always the highest elo match for the given game mode.
+"Game mode" is the exact same format that's used in PS URLs.
+"Go" immediately finds a new match.
+"Auto Spectate" finds new matches whenever the current one ends.
+"Stop Auto Spectate" disables auto spectate.
+New matches are always the highest elo match for the given game mode.
