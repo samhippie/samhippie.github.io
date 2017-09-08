@@ -1,4 +1,4 @@
-var sock = new SockJS("https://sim.smogon.com:8000/showdown");
+var sock = new SockJS("http://sim.smogon.com:8000/showdown");
 
 sock.onopen = function()
 {
@@ -37,7 +37,7 @@ sock.onmessage = function(e)
 function connect(room)
 {
 	var frame = document.getElementById("psframe");
-	frame.src = "https://play.pokemonshowdown.com/" + room;
+	frame.src = "http://play.pokemonshowdown.com/" + room;
 	sock.send("|/join " + room);
 	curRoom = room;
 }
