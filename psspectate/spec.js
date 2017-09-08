@@ -28,7 +28,7 @@ sock.onmessage = function(e)
 	else if(state == 2 && data[2].indexOf("Ladder updating...") != -1)
 	{
 		console.log("end of battle, todo do something here");
-		sock.send("|/leave " + room);
+		sock.send("|/leave " + curRoom);
 		if(doAutoSearch)
 			setTimeout(function(){search();}, 10000);
 	}
