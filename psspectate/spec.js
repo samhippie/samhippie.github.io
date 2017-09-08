@@ -1,4 +1,4 @@
-var sock = new SockJS("http://sim.smogon.com:8000/showdown");
+var sock = new SockJS("https://sim.smogon.com:8000/showdown");
 
 sock.onopen = function()
 {
