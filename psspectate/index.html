@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script> 
+	<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+	<script type="text/javascript" src="spec.js"></script>
+</head>
+<body>
+	PS Auto Spectate 4000<br>
+	Game mode:
+	<input type="text" id="gametype" value="gen7vgc2017">
+	<button onclick="search()" >Go</button>
+	<button onclick="autosearch(true)" id="autosearch">Auto Spectate</button>
+	<button onclick="autosearch(false)" id="stopautosearch" disabled="disabled">Stop Auto Spectate</button>
+	<div class="ps">
+		<iframe id ="psframe" src="https://play.pokemonshowdown.com"></iframe>
+	</div>
+	"Game mode" is the exact same format that's used in PS URLs. "Go" immediately finds a new match. "Auto Spectate" finds new matches whenever the current one ends. "Stop Auto Spectate" disables this behavior. New matches are always the highest elo match for the given game mode.
+</body>
+</html>
