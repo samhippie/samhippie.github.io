@@ -5,3 +5,7 @@ Press "Go" or "Auto Spectate" to begin.
 "Auto Spectate" finds new matches whenever the current one ends.
 "Stop Auto Spectate" disables auto spectate.
 New matches are always the highest elo match for the given game mode.
+
+
+THIS DOES NOT WORK WITH HTTPS!
+Make sure your URL says "http://" and not "https://" if you are having issues.
