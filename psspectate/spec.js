@@ -30,7 +30,7 @@ sock.onmessage = function(e)
 		console.log("end of battle, todo do something here");
 		sock.send("|/leave " + curRoom);
 		if(doAutoSearch)
-			setTimeout(function(){search();}, 10000);
+			setTimeout(function(){search();}, 20*1000);
 	}
 }
 
